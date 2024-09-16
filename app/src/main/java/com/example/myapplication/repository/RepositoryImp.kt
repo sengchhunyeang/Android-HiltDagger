@@ -9,13 +9,10 @@ import javax.inject.Inject
 class RepositoryImp @Inject constructor(
     private val apiService: IDatasource
 ) : IRepository {
-
     override suspend fun fetchArticles(): Response<ArticleResponse> {
         return apiService.fetchArticles()
     }
-
     override suspend fun deleteArticle(id: Int): Response<Unit> {
         return apiService.deleteArticle(id)
     }
-
 }

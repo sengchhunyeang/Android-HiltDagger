@@ -112,3 +112,4 @@ kapt {
 hilt {
     enableAggregatingTask = true
 }
+

@@ -1,6 +1,7 @@
 package com.example.basicmvvm.ui.screen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
+
+
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
@@ -41,6 +44,7 @@ class ArticleViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     // Refresh the list after successful deletion
                     fetchArticles()
+
                 } else {
                     Log.e("ArticleViewModel", "Error deleting article: ${response.errorBody()?.string()}")
                 }
@@ -49,4 +53,5 @@ class ArticleViewModel @Inject constructor(
             }
         }
     }
+
 }

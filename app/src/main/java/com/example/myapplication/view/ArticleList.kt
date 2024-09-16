@@ -1,14 +1,25 @@
 package com.example.myapplication.view
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,9 +30,7 @@ import com.example.myapplication.viewmodel.ArticleViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleList(viewModel: ArticleViewModel = hiltViewModel()) {
-//    val articles by viewModel.articles.collectAsState()
-    val articles by viewModel.articles.observeAsState(emptyList())  // Observe LiveData
-
+    val articles by viewModel.articles.observeAsState(emptyList())
     Scaffold(
         content = { padding ->
             if (articles.isEmpty()) {
@@ -42,7 +51,7 @@ fun ArticleList(viewModel: ArticleViewModel = hiltViewModel()) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(articles) { article ->
-                        ArticleItem(article = article)
+                        ArticleItem(article = article, viewModel = viewModel)
                     }
                 }
             }
@@ -51,18 +60,17 @@ fun ArticleList(viewModel: ArticleViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun ArticleItem(article: Article) {
+fun ArticleItem(article: Article, viewModel: ArticleViewModel) {
     Column(modifier = Modifier.padding(8.dp)) {
-        // Load and display image if imageUrl is not null
         if (article.imageUrl != null) {
             AsyncImage(
                 model = article.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)  // Adjust height as needed
+                    .height(200.dp)
                     .padding(bottom = 8.dp),
-                contentScale = ContentScale.Crop // Adjust content scale as needed
+                contentScale = ContentScale.Crop
             )
         }
         Text(
@@ -93,5 +101,11 @@ fun ArticleItem(article: Article) {
             text = "Published: ${if (article.isPublished) "Yes" else "No"}",
             style = MaterialTheme.typography.bodyMedium
         )
+        Button(
+            onClick = { viewModel.deleteArticle(article.id) },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        ) {
+            Text(text = "Delete")
+        }
     }
 }

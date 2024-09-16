@@ -1,16 +1,14 @@
 package com.example.myapplication.viewmodel
 
-import com.example.myapplication.model.Article
-import com.example.myapplication.repository.ArticleRepository
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.model.Article
+import com.example.myapplication.repository.ArticleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 //
@@ -34,31 +32,21 @@ import javax.inject.Inject
 //        }
 //    }
 //}
-
-
 // Live Data
 @HiltViewModel
 class ArticleViewModel @Inject constructor(private val repository: ArticleRepository) : ViewModel() {
-
-    // Use LiveData for real-time updates
-    private val _articles = MutableLiveData<List<Article>>()
-    val articles: LiveData<List<Article>> = _articles
-
+    val articles: LiveData<List<Article>> get() = repository.articles
     init {
-        getArticles()
+        fetchArticles()
     }
-    private fun getArticles() {
+    private fun fetchArticles() {
         viewModelScope.launch {
-            try {
-                val articleList = repository.getArticles()
-                articleList.collect { articles ->
-                    Log.d("ArticleViewModel", "Fetched articles: $articles")
-                    _articles.postValue(articles)  // Post value to LiveData
-                }
-            } catch (e: Exception) {
-                Log.e("ArticleViewModel", "Error fetching articles", e)
-                _articles.postValue(emptyList())  // Handle error by posting an empty list
-            }
+            repository.fetchArticles()
+        }
+    }
+    fun deleteArticle(id: Int) {
+        viewModelScope.launch {
+            repository.deleteArticle(id)
         }
     }
 }

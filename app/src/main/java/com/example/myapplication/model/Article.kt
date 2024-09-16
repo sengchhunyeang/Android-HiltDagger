@@ -14,4 +14,3 @@ data class Article(
     @SerialName("views") val views: Int,
     @SerialName("is_published") val isPublished: Boolean
 )
-

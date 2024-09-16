@@ -1,0 +1,19 @@
+package com.example.myapplication.datasource
+
+import com.example.myapplication.model.ArticleResponse
+import com.example.myapplication.service.ApiService
+import retrofit2.Response
+import javax.inject.Inject
+
+class DatasourceImp @Inject constructor(
+    private val apiService: ApiService
+) : IDatasource {
+
+    override suspend fun fetchArticles(): Response<ArticleResponse> {
+        return apiService.fetchArticles()
+    }
+
+    override suspend fun deleteArticle(id: Int): Response<Unit> {
+       return apiService.deleteArticle(id)
+    }
+}

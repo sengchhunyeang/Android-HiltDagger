@@ -1,52 +1,52 @@
-package com.example.myapplication.viewmodel
+package com.example.basicmvvm.ui.screen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.Article
-import com.example.myapplication.repository.ArticleRepository
+import com.example.myapplication.model.ArticleResponse
+import com.example.myapplication.repository.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import retrofit2.Response
 import javax.inject.Inject
 
-//
-//@HiltViewModel
-//class ArticleViewModel @Inject constructor(private val repository: ArticleRepository) : ViewModel() {
-//    private val _articles = MutableStateFlow<List<Article>>(emptyList())
-//    val articles: StateFlow<List<Article>> = _articles
-//    init {
-//        getArticles()
-//    }
-//    private fun getArticles() {
-//        viewModelScope.launch {
-//            try {
-//                repository.getArticles().collect { articleList ->
-//                    Log.d("ArticleViewModel", "Fetched articles: $articleList")
-//                    _articles.value = articleList
-//                }
-//            } catch (e: Exception) {
-//                Log.e("ArticleViewModel", "Error fetching articles", e)
-//            }
-//        }
-//    }
-//}
-// Live Data
 @HiltViewModel
-class ArticleViewModel @Inject constructor(private val repository: ArticleRepository) : ViewModel() {
-    val articles: LiveData<List<Article>> get() = repository.articles
-    init {
-        fetchArticles()
-    }
-    private fun fetchArticles() {
+class ArticleViewModel @Inject constructor(
+    private val repository: IRepository
+) : ViewModel() {
+    private val _articles = MutableLiveData<List<Article>>()
+    val articles: LiveData<List<Article>> get() = _articles
+    fun fetchArticles() {
         viewModelScope.launch {
-            repository.fetchArticles()
+            try {
+                val response = repository.fetchArticles()
+                if (response.isSuccessful) {
+                    _articles.postValue(response.body()?.payload ?: emptyList())
+                    Log.d("ArticleViewModel", "Articles fetched successfully: ${response.isSuccessful} articles")
+                } else {
+                    Log.e("ArticleViewModel", "Error fetching articles: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("ArticleViewModel", "Exception: $e")
+            }
         }
     }
     fun deleteArticle(id: Int) {
         viewModelScope.launch {
-            repository.deleteArticle(id)
+            try {
+                val response = repository.deleteArticle(id)
+                if (response.isSuccessful) {
+                    // Refresh the list after successful deletion
+                    fetchArticles()
+                } else {
+                    Log.e("ArticleViewModel", "Error deleting article: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("ArticleViewModel", "Exception: $e")
+            }
         }
     }
 }

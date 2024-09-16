@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -24,13 +25,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.basicmvvm.ui.screen.ArticleViewModel
 import com.example.myapplication.model.Article
-import com.example.myapplication.viewmodel.ArticleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleList(viewModel: ArticleViewModel = hiltViewModel()) {
+    // Observe LiveData from the ViewModel
     val articles by viewModel.articles.observeAsState(emptyList())
+
+    // Fetch articles when the Composable first loads
+    LaunchedEffect(Unit) {
+        viewModel.fetchArticles()
+    }
+
     Scaffold(
         content = { padding ->
             if (articles.isEmpty()) {
@@ -102,10 +110,11 @@ fun ArticleItem(article: Article, viewModel: ArticleViewModel) {
             style = MaterialTheme.typography.bodyMedium
         )
         Button(
-            onClick = { viewModel.deleteArticle(article.id) },
+            onClick = {  viewModel.deleteArticle(article.id) },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
         ) {
             Text(text = "Delete")
         }
     }
 }
+

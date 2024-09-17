@@ -96,6 +96,7 @@ dependencies {
         // Coil for image loading
         implementation("io.coil-kt:coil-compose:2.0.0")
         implementation (libs.androidx.runtime.livedata.vversion)
+        implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
         // Testing
         testImplementation("junit:junit:4.13.2")
         androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -104,7 +105,6 @@ dependencies {
         debugImplementation("androidx.compose.ui:ui-tooling:1.6.0")
         debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.0")
     }
-
 }
 kapt {
     correctErrorTypes = true

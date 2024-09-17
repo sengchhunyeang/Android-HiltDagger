@@ -1,5 +1,6 @@
 package com.example.myapplication.datasource
 
+import com.example.myapplication.model.Article
 import com.example.myapplication.model.ArticleResponse
 import com.example.myapplication.service.ApiService
 import retrofit2.Response
@@ -15,5 +16,9 @@ class DatasourceImp @Inject constructor(
 
     override suspend fun deleteArticle(id: Int): Response<Unit> {
        return apiService.deleteArticle(id)
+    }
+
+    override suspend fun postArticle(article: Article): Response<ArticleResponse> {
+       return apiService.postArticle(article)
     }
 }

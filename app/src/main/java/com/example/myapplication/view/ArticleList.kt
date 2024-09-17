@@ -24,13 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.basicmvvm.ui.screen.ArticleViewModel
 import com.example.myapplication.model.Article
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleList(viewModel: ArticleViewModel = hiltViewModel()) {
+fun ArticleList( navController: NavHostController,viewModel: ArticleViewModel = hiltViewModel()) {
     // Observe LiveData from the ViewModel
     val articles by viewModel.articles.observeAsState(emptyList())
 

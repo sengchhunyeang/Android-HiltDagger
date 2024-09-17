@@ -14,8 +14,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
-
-
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
     private val repository: IRepository
@@ -28,15 +26,22 @@ class ArticleViewModel @Inject constructor(
                 val response = repository.fetchArticles()
                 if (response.isSuccessful) {
                     _articles.postValue(response.body()?.payload ?: emptyList())
-                    Log.d("ArticleViewModel", "Articles fetched successfully: ${response.isSuccessful} articles")
+                    Log.d(
+                        "ArticleViewModel",
+                        "Articles fetched successfully: ${response.isSuccessful} articles"
+                    )
                 } else {
-                    Log.e("ArticleViewModel", "Error fetching articles: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ArticleViewModel",
+                        "Error fetching articles: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("ArticleViewModel", "Exception: $e")
             }
         }
     }
+
     fun deleteArticle(id: Int) {
         viewModelScope.launch {
             try {
@@ -46,12 +51,28 @@ class ArticleViewModel @Inject constructor(
                     fetchArticles()
 
                 } else {
-                    Log.e("ArticleViewModel", "Error deleting article: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ArticleViewModel",
+                        "Error deleting article: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("ArticleViewModel", "Exception: $e")
             }
         }
     }
-
+    fun postArticle(article: Article) {
+        viewModelScope.launch {
+            try {
+                val response = repository.postArticle(article)
+                if (response.isSuccessful) {
+                    fetchArticles() // Refresh the list of articles
+                } else {
+                    // Handle unsuccessful response, e.g., show a message
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, e.g., show a message
+            }
+        }
+    }
 }

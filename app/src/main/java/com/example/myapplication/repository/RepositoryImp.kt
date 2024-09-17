@@ -29,5 +29,15 @@ class RepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun updateArticle(id: Int, article: Article): Response<ArticleResponse> {
+        val response=apiService.updateArticle(id,article)
+        if (response.isSuccessful){
+            return response
+        }else{
+            val errorBody = response.errorBody()?.string()
+            Log.e("UPDATE_ARTICLE_ERROR", "Error posting article: $errorBody")
+            throw Exception("Error Updating article: $errorBody")
+        }
+    }
 
 }

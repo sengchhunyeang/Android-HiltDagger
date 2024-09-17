@@ -1,5 +1,6 @@
 package com.example.myapplication.view
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -115,6 +116,12 @@ fun ArticleItem(article: Article, viewModel: ArticleViewModel) {
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
         ) {
             Text(text = "Delete")
+        }
+        Button(
+            onClick = {   },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow)
+        ) {
+            Text(text = "Update ")
         }
     }
 }

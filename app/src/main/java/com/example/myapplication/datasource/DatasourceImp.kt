@@ -21,4 +21,8 @@ class DatasourceImp @Inject constructor(
     override suspend fun postArticle(article: Article): Response<ArticleResponse> {
        return apiService.postArticle(article)
     }
+
+    override suspend fun updateArticle(id: Int, article: Article): Response<ArticleResponse> {
+        return apiService.updateArticle(id, article)
+    }
 }

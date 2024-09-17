@@ -67,11 +67,21 @@ class ArticleViewModel @Inject constructor(
                 val response = repository.postArticle(article)
                 if (response.isSuccessful) {
                     fetchArticles() // Refresh the list of articles
-                } else {
-                    // Handle unsuccessful response, e.g., show a message
                 }
             } catch (e: Exception) {
                 // Handle exceptions, e.g., show a message
+            }
+        }
+    }
+    fun updateArticle(id: Int,article: Article){
+        viewModelScope.launch {
+            try {
+                val response=repository.updateArticle(id, article)
+                if (response.isSuccessful){
+                    fetchArticles()
+                }
+            }catch (_:Exception){
+
             }
         }
     }
